@@ -18,8 +18,4 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.HOST_USERNAME }}
           key: ${{ secrets.PRIVATE_KEY }}
-          script: |
-            cd /opt/weltew-back
-            git pull
-            systemctl restart weltew
-            touch test.txt
+          script: whoami
