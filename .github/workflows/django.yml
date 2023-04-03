@@ -20,4 +20,6 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: 22
           script: |
-            whoami
+            cd /opt/weltew-back
+            git pull
+            systemctl restart weltew
