@@ -1,5 +1,5 @@
 from django_filters import rest_framework as filters
-from .models import ProductModel, ProductCategoryModel, CollectionModel, CollectionCategoryModel
+from .models import ProductModel, ProductCategoryModel, CollectionModel, CollectionCategoryModel, CartModel, Customer
 
 
 class ProductFilter(filters.FilterSet):
@@ -40,3 +40,15 @@ class CollectionFilter(filters.FilterSet):
         self.filters['category'].label = "Категория"
         self.filters['name'].label = "Название"
         self.filters['description'].label = "Описание"
+
+class CartFilter(filters.FilterSet):
+    customer = filters.ModelChoiceFilter(
+        queryset=Customer.objects.all())
+
+    class Meta:
+        model = CartModel
+        fields = ['customer']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.filters['customer'].label = "Покупатель"

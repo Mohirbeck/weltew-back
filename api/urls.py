@@ -43,4 +43,7 @@ urlpatterns = [
     path('contacts/', views.ContactsViewSet.as_view()),
     path('customers/', views.CustomerViewSet.as_view()),
     path('customers/<int:pk>/', views.CustomerRetrieveViewSet.as_view()),
+    path('cart/', views.CartViewSet.as_view()),
+    path('cart/<int:pk>/', views.CartRetrieveViewSet.as_view()),
+    path('cart/create/', views.CartCreateViewSet.as_view()),
 ]

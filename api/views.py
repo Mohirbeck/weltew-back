@@ -5,6 +5,7 @@ from .models import (
     ProductCategoryModel,
     CollectionModel,
     Customer,
+    CartModel
 )
 from .serializers import (
     CatalogSerializer,
@@ -22,8 +23,10 @@ from .serializers import (
     CollectionRetrieveSerializer,
     CollectionSerializer,
     CustomerSerializer,
+    CartSerializer,
+    CartPostSerializer,
 )
-from .filters import ProductFilter, CollectionFilter
+from .filters import ProductFilter, CollectionFilter, CartFilter
 from pages.models import (
     BestSeller,
     Catalog,
@@ -131,7 +134,7 @@ class PagesViewSet(generics.ListAPIView):
 class PagesRetrieveViewSet(generics.RetrieveAPIView):
     queryset = PagesModel.objects.all()
     serializer_class = PagesSerializer
-    lookup_field = 'page_id'
+    lookup_field = "page_id"
 
 
 class MainBannerViewSet(generics.ListAPIView):
@@ -153,10 +156,25 @@ class CustomerViewSet(generics.ListCreateAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
+
 class CustomerRetrieveViewSet(generics.RetrieveUpdateDestroyAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
+
 class CatalogViewSet(generics.ListAPIView):
     queryset = Catalog.objects.all()
     serializer_class = CatalogSerializer
+
+class CartViewSet(generics.ListAPIView):
+    queryset = CartModel.objects.all()
+    serializer_class = CartSerializer
+    filterset_class = CartFilter
+
+class CartRetrieveViewSet(generics.RetrieveUpdateDestroyAPIView):
+    queryset = CartModel.objects.all()
+    serializer_class = CartPostSerializer
+
+class CartCreateViewSet(generics.CreateAPIView):
+    queryset = CartModel.objects.all()
+    serializer_class = CartPostSerializer
