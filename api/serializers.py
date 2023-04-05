@@ -146,11 +146,6 @@ class InstagramTokenSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CustomerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Customer
-        fields = "__all__"
-
 
 class CatalogSerializer(serializers.ModelSerializer):
     class Meta:
@@ -158,14 +153,3 @@ class CatalogSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CartSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(many=False, read_only=True)
-
-    class Meta:
-        model = CartModel
-        fields = "__all__"
-
-class CartPostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CartModel
-        fields = "__all__"

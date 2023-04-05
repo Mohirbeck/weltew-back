@@ -359,47 +359,17 @@ class CustomerCollectionItemModel(models.Model):
         return f"{self.product} - {self.quantity} - {self.collection.collection}"
 
 
-class OrderItemModel(models.Model):
-    product = models.ForeignKey(
-        "ProductModel",
-        blank=True,
-        related_name="orders",
-        verbose_name="Товары",
-        on_delete=models.CASCADE,
-    )
-    quantity = models.IntegerField(verbose_name="Количество", default=1)
-    order = models.ForeignKey(
-        "OrderModel",
-        on_delete=models.CASCADE,
-        verbose_name="Заказ",
-        related_name="products",
-        blank=True,
-        null=True,
-    )
-
-    class Meta:
-        verbose_name = "Товар в заказе"
-        verbose_name_plural = "Товары в заказе"
-
-    def __str__(self):
-        return f"{self.product} - {self.quantity} - {self.order.fio}"
-
 
 class OrderModel(models.Model):
     fio = models.CharField(max_length=255, verbose_name="ФИО")
     phone = models.CharField(max_length=255, verbose_name="Телефон")
     comment = models.TextField(blank=True, null=True, verbose_name="Комментарий")
+    products = models.TextField(blank=True, null=True, verbose_name="Товары")
+    total_price = models.IntegerField(verbose_name="Сумма заказа", default=0)
     date = models.DateTimeField(auto_now_add=True, verbose_name="Дата заказа")
     lead_id = models.CharField(
         max_length=255, verbose_name="ID сделки", blank=True, null=True
     )
-
-    @property
-    def total_price(self):
-        total = 0
-        for item in self.products.all():
-            total += item.product.price * item.quantity
-        return total
 
     class Meta:
         verbose_name = "Заказ"
@@ -452,8 +422,8 @@ class CRMModel(models.Model):
     redirect_uri = models.CharField(max_length=255, verbose_name="URI перенаправления")
 
     class Meta:
-        verbose_name = "Заявка"
-        verbose_name_plural = "Заявки"
+        verbose_name = "AmoCRM"
+        verbose_name_plural = "AmoCRM"
 
     def __str__(self):
         return self.integration_id

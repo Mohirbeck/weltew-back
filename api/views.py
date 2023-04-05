@@ -1,11 +1,19 @@
+import json
+import requests
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from .models import (
+    CRMModel,
     CollectionCategoryModel,
     ProductModel,
     ProductCategoryModel,
     CollectionModel,
     Customer,
-    CartModel
+    CartModel,
+    CustomerCollectionModel,
+    OrderModel,
+    CustomerCollectionItemModel,
 )
 from .serializers import (
     CatalogSerializer,
@@ -22,11 +30,8 @@ from .serializers import (
     InstagramTokenSerializer,
     CollectionRetrieveSerializer,
     CollectionSerializer,
-    CustomerSerializer,
-    CartSerializer,
-    CartPostSerializer,
 )
-from .filters import ProductFilter, CollectionFilter, CartFilter
+from .filters import ProductFilter, CollectionFilter
 from pages.models import (
     BestSeller,
     Catalog,
@@ -152,29 +157,129 @@ class InstagramTokenViewSet(generics.ListAPIView):
     serializer_class = InstagramTokenSerializer
 
 
-class CustomerViewSet(generics.ListCreateAPIView):
-    queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
-
-
-class CustomerRetrieveViewSet(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
-
-
 class CatalogViewSet(generics.ListAPIView):
     queryset = Catalog.objects.all()
     serializer_class = CatalogSerializer
 
-class CartViewSet(generics.ListAPIView):
-    queryset = CartModel.objects.all()
-    serializer_class = CartSerializer
-    filterset_class = CartFilter
 
-class CartRetrieveViewSet(generics.RetrieveUpdateDestroyAPIView):
-    queryset = CartModel.objects.all()
-    serializer_class = CartPostSerializer
+def refresh_token():
+    queryset = CRMModel.objects.all()
+    for obj in queryset:
+        url = "https://saroyconcept.amocrm.ru/oauth2/access_token"
+        data = {
+            "client_id": obj.integration_id,
+            "client_secret": obj.secret_key,
+            "grant_type": "refresh_token",
+            "refresh_token": obj.refresh_token,
+            "redirect_uri": obj.redirect_uri,
+        }
+        data = json.dumps(data)
+        response = requests.post(
+            url, data=data, headers={"Content-Type": "application/json"}
+        )
+        if response.status_code == 200:
+            obj.access_token = response.json()["access_token"]
+            obj.refresh_token = response.json()["refresh_token"]
+            obj.save()
 
-class CartCreateViewSet(generics.CreateAPIView):
-    queryset = CartModel.objects.all()
-    serializer_class = CartPostSerializer
+
+class OrderToCRM(APIView):
+    def post(self, request, format=None):
+        refresh_token()
+        url = "https://saroyconcept.amocrm.ru/api/v4/leads/complex"
+        headers = {
+            "Authorization": f"Bearer {CRMModel.objects.first().access_token}",
+            "Content-Type": "application/json",
+        }
+        data = request.data
+        text = ""
+        if len(data["collections"]) > 0:
+            for collection in data["collections"]:
+                coll = CollectionModel.objects.get(id=collection["id"])
+                products = [
+                    f"{item['name']} - {item['quantity']} шт"
+                    for item in collection["products"]
+                ]
+                ps = "\n".join(products)
+                text += f"Коллекция {collection}" + "\n" + ps + "\n"
+        if len(data["products"]) > 0:
+            products = [
+                f"{item['name']} - {item['quantity']} шт" for item in data["products"]
+            ]
+            ps = "\n".join(products)
+            text += f"Продукты:" + "\n" + ps + "\n"
+        order = OrderModel.objects.create(
+            fio=data["name"],
+            total_price=data["total"],
+            products=text,
+            phone=data["phone"],
+            comment=data["comment"],
+        )
+        req_data = [
+            {
+                "created_by": 0,
+                "price": int(order.total_price),
+                "custom_fields_values": [
+                    {"field_id": 1065243, "values": [{"value": text}]}
+                ],
+                "pipeline_id": 6664814,
+                "_embedded": {
+                    "contacts": [
+                        {
+                            "first_name": order.fio,
+                            "custom_fields_values": [
+                                {
+                                    "field_code": "PHONE",
+                                    "values": [{"value": order.phone}],
+                                }
+                            ],
+                        }
+                    ]
+                },
+            }
+        ]
+        req_data = json.dumps(req_data)
+        response = requests.post(url, data=req_data, headers=headers)
+        print(req_data)
+        if response.status_code == 200:
+            order.lead_id = response.json()[0]["id"]
+            order.save()
+
+        return Response({"success": True})
+
+    # if collection:
+    # products = [
+    #     f"{item.product.name} - {item.quantity} шт" for item in order.products.all()
+    # ]
+    # ps = "\n".join(products)
+    # text = f"Коллекции {collection}" + "\n" + ps
+    # else:
+    #     products = [
+    #         f"{item.product.name} - {item.quantity} шт" for item in order.products.all()
+    #     ]
+    #     text = "\n".join(products)
+    # data = [
+    #     {
+    # "created_by": 0,
+    # "price": int(order.total_price),
+    # "custom_fields_values": [
+    #     {"field_id": 1065243, "values": [{"value": text}]}
+    # ],
+    # "pipeline_id": 6222090,
+    # "_embedded": {
+    #     "contacts": [
+    #         {
+    #             "first_name": order.fio,
+    #             "custom_fields_values": [
+    #                 {"field_code": "PHONE", "values": [{"value": order.phone}]}
+    #             ],
+    #         }
+    #     ]
+    # },
+    #     }
+    # ]
+    # data = json.dumps(data)
+    # response = requests.post(url, data=data, headers=headers)
+    # if response.status_code == 200:
+    #     order.lead_id = response.json()[0]["id"]
+    #     order.save()
