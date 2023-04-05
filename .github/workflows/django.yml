@@ -22,4 +22,8 @@ jobs:
           script: |
             cd /opt/weltew-back
             git pull
+            source .venv/bin/activate
+            python manage.py makemigrations
+            python manage.py migrate
+            deactivate
             systemctl restart weltew
