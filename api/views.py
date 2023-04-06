@@ -197,14 +197,14 @@ class OrderToCRM(APIView):
             for collection in data["collections"]:
                 coll = CollectionModel.objects.get(id=collection["id"])
                 products = [
-                    f"{item['name']} - {item['quantity']} шт"
+                    f"{item['name']} - {item['quantity']} шт,"
                     for item in collection["products"]
                 ]
                 ps = "\n".join(products)
-                text += f"Коллекция {collection}" + "\n" + ps + "\n"
+                text += f"Коллекция {collection['name']}:" + "\n" + ps + "\n"
         if len(data["products"]) > 0:
             products = [
-                f"{item['name']} - {item['quantity']} шт" for item in data["products"]
+                f"{item['name']} - {item['quantity']} шт," for item in data["products"]
             ]
             ps = "\n".join(products)
             text += f"Продукты:" + "\n" + ps + "\n"
