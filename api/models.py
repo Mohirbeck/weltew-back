@@ -414,10 +414,10 @@ class CRMModel(models.Model):
     )
     code_auth = models.TextField(verbose_name="Код авторизации")
     access_token = models.TextField(
-        max_length=255, verbose_name="Токен доступа", blank=True, null=True
+        verbose_name="Токен доступа", blank=True, null=True
     )
     refresh_token = models.TextField(
-        max_length=255, verbose_name="Токен обновления", blank=True, null=True
+        verbose_name="Токен обновления", blank=True, null=True
     )
     redirect_uri = models.CharField(max_length=255, verbose_name="URI перенаправления")
 
