@@ -146,10 +146,30 @@ class InstagramTokenSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-
 class CatalogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Catalog
         fields = "__all__"
 
 
+class SearchSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    category = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
+    collection = serializers.SerializerMethodField()
+
+    def get_image(self, obj):
+        if obj.images.first():
+            return obj.images.first().image.url
+        return None
+
+    def get_category(self, obj):
+        return obj.category.name
+
+    def get_collection(self, obj):
+        # get model name
+        model_name = obj._meta.model_name
+        if model_name == "collectionmodel":
+            return True
+        return False

@@ -42,4 +42,5 @@ urlpatterns = [
     path('toprated/', views.TopRatedViewSet.as_view()),
     path('contacts/', views.ContactsViewSet.as_view()),
     path('checkout/', views.OrderToCRM.as_view()),
+    path('search/', views.Search.as_view()),
 ]

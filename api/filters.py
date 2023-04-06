@@ -52,3 +52,6 @@ class CartFilter(filters.FilterSet):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.filters['customer'].label = "Покупатель"
+
+class SearchFilter(filters.FilterSet):
+    q = filters.CharFilter(lookup_expr='icontains')

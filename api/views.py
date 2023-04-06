@@ -3,6 +3,7 @@ import requests
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.pagination import LimitOffsetPagination
 from .models import (
     CRMModel,
     CollectionCategoryModel,
@@ -30,7 +31,9 @@ from .serializers import (
     InstagramTokenSerializer,
     CollectionRetrieveSerializer,
     CollectionSerializer,
+    SearchSerializer,
 )
+from itertools import chain
 from .filters import ProductFilter, CollectionFilter
 from pages.models import (
     BestSeller,
@@ -283,3 +286,19 @@ class OrderToCRM(APIView):
     # if response.status_code == 200:
     #     order.lead_id = response.json()[0]["id"]
     #     order.save()
+
+class Search(APIView, LimitOffsetPagination):
+    def get(self, request):
+        query = request.GET.get("q", None)
+        products = ProductModel.objects.all()
+        collections = CollectionModel.objects.all()
+        if query:
+            print(query)
+            products = products.filter(name__icontains=query)
+            collections = collections.filter(name__icontains=query)
+            print(products, collections)
+            # queryset = self.paginate_queryset(queryset, request, view=self)
+        queryset = list(chain(collections, products))
+        queryset = self.paginate_queryset(queryset, request, view=self)
+        serializer = SearchSerializer(queryset, many=True)
+        return self.get_paginated_response(serializer.data)
