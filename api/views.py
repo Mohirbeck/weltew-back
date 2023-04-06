@@ -21,6 +21,7 @@ from .serializers import (
     ProductSerializer,
     ProductCategorySerializer,
     BestSellerSerializer,
+    TipSerializer,
     TopRatedSerializer,
     YouTubeSerializer,
     CollectionCategorySerializer,
@@ -38,6 +39,7 @@ from .filters import ProductFilter, CollectionFilter
 from pages.models import (
     BestSeller,
     Catalog,
+    Tip,
     TopRated,
     YouTube,
     ContactsModel,
@@ -302,3 +304,8 @@ class Search(APIView, LimitOffsetPagination):
         queryset = self.paginate_queryset(queryset, request, view=self)
         serializer = SearchSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)
+    
+
+class TipViewSet(generics.ListAPIView):
+    queryset = Tip.objects.all()
+    serializer_class = TipSerializer

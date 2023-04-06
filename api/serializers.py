@@ -19,6 +19,7 @@ from pages.models import (
     MainBannerModel,
     SecondaryBannerModel,
     InstagramTokenModel,
+    Tip
 )
 
 
@@ -173,3 +174,9 @@ class SearchSerializer(serializers.Serializer):
         if model_name == "collectionmodel":
             return True
         return False
+
+
+class TipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tip
+        fields = "__all__"
