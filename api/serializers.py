@@ -52,7 +52,7 @@ class ProductImagesSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     category = serializers.CharField(
-        source="category.name", read_only=True, allow_null=True
+        source="category", read_only=True, allow_null=True
     )
     price = serializers.SerializerMethodField()
     discount = serializers.IntegerField(read_only=True)
