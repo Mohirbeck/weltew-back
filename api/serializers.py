@@ -49,11 +49,13 @@ class ProductImagesSerializer(serializers.ModelSerializer):
         model = ProductImagesModel
         fields = ["image", "id"]
 
+class ProductCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductCategoryModel
+        fields = "__all__"
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.CharField(
-        source="category", read_only=True, allow_null=True
-    )
+    category = ProductCategorySerializer(many=False, read_only=True)
     price = serializers.SerializerMethodField()
     discount = serializers.IntegerField(read_only=True)
     images = ProductImagesSerializer(many=True, read_only=True)
@@ -84,11 +86,6 @@ class CollectionRetrieveSerializer(serializers.ModelSerializer):
         model = CollectionModel
         fields = "__all__"
 
-
-class ProductCategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductCategoryModel
-        fields = "__all__"
 
 
 class BestSellerSerializer(serializers.ModelSerializer):
