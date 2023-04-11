@@ -61,7 +61,7 @@ class ProductModel(models.Model):
         upload_to="assembly/", default="", verbose_name="Сборка", null=True, blank=True
     )
     features = models.JSONField(null=True, blank=True, verbose_name="Характеристики")
-    url = models.URLField(max_length=255, verbose_name="Ссылка", null=True, blank=True)
+    url = models.CharField(max_length=255, verbose_name="Ссылка", null=True, blank=True)
     is_active = models.BooleanField(default=True, verbose_name="Активность")
     sklad_cat = models.CharField(
         max_length=255,
@@ -108,7 +108,7 @@ class Product3DModel(models.Model):
         related_name="product_3d",
     )
     obj = models.FileField(upload_to="3d/", null=True, blank=True)
-    url = models.URLField(default="")
+    url = models.CharField(max_length=255, default="")
 
     class Meta:
         verbose_name = "3D модель"
@@ -146,7 +146,7 @@ class CollectionCategoryModel(models.Model):
     image = models.FileField(
         upload_to="images/", null=True, blank=True, verbose_name="Изображение"
     )
-    url = models.URLField(default="")
+    url = models.CharField(max_length=255, default="")
 
     class Meta:
         verbose_name = "Категория коллекции"
@@ -179,7 +179,7 @@ class CollectionModel(models.Model):
         related_name="default_products",
         verbose_name="Товары по умолчанию",
     )
-    url = models.URLField(default="")
+    url = models.CharField(max_length=255, default="")
     category = models.ForeignKey(
         "CollectionCategoryModel",
         on_delete=models.DO_NOTHING,
@@ -215,7 +215,7 @@ class CollectionImagesModel(models.Model):
         null=True,
         blank=True,
     )
-    url = models.URLField(default="", null=True, blank=True, verbose_name="Ссылка")
+    url = models.CharField(max_length=255, default="", null=True, blank=True, verbose_name="Ссылка")
 
     class Meta:
         verbose_name = "Изображение коллекции"
@@ -234,7 +234,7 @@ class ProductImagesModel(models.Model):
         null=True,
         blank=True,
     )
-    url = models.URLField(default="", null=True, blank=True, verbose_name="Ссылка")
+    url = models.CharField(max_length=255, default="", null=True, blank=True, verbose_name="Ссылка")
 
     class Meta:
         verbose_name = "Изображение товара"
@@ -250,7 +250,7 @@ class ColorModel(models.Model):
     image = models.ImageField(
         upload_to="images/", null=True, blank=True, verbose_name="Изображение"
     )
-    url = models.URLField(default="", null=True, blank=True, verbose_name="Ссылка")
+    url = models.CharField(max_length=255, default="", null=True, blank=True, verbose_name="Ссылка")
 
     class Meta:
         verbose_name = "Цвет"
