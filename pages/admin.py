@@ -34,7 +34,6 @@ class YouTubeAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(ContactsModel)
 class ContactsAdmin(admin.ModelAdmin):
     list_display = (
         "id",
@@ -42,7 +41,21 @@ class ContactsAdmin(admin.ModelAdmin):
         "email",
         "address",
     )
+    class Media:
+        js = (
+            '//api.tiles.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.js',
+            '//code.jquery.com/jquery-3.6.4.min.js',
+            '//api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.0/mapbox-gl-geocoder.min.js',
 
+        )
+        css = {
+            'all': (
+                '//api.tiles.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css',
+                '//api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.0/mapbox-gl-geocoder.css',
+            )
+        }
+
+admin.site.register(ContactsModel, ContactsAdmin)
 
 @admin.register(PagesModel)
 class PagesAdmin(admin.ModelAdmin):
