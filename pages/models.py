@@ -90,6 +90,9 @@ class ContactsModel(models.Model):
     address = models.CharField(
         max_length=255, verbose_name="Адрес", null=True, blank=True
     )
+    image = models.ImageField(
+        upload_to='images/', verbose_name="Изображение", null=True, blank=True
+    )
 
     class Meta:
         verbose_name = "Контакт"
