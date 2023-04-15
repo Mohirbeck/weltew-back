@@ -127,6 +127,7 @@ class ProductAdmin(admin.ModelAdmin):
                     "material",
                     "colors",
                     "availibility",
+                    "youtube_video_id",
                     "url",
                     "description",
                 )
@@ -168,7 +169,7 @@ class CollectionAdmin(admin.ModelAdmin):
     inlines = [CollectionImageInline]
 
     fieldsets = (
-        ("Общее", {"fields": ("name", "discount", "description", "category")}),
+        ("Общее", {"fields": ("name", "discount", "description", "category", "youtube_video_id")}),
         ("Товары", {"fields": ("products", "default_products")}),
     )
 
