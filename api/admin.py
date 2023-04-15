@@ -93,6 +93,7 @@ class ProductAdmin(admin.ModelAdmin):
         "category",
     ]
     search_fields = ["name", "price"]
+    list_filter = ["category", "is_active", "is_aktsiya"]
     inlines = [ProductImageInline]
     form = JsonDocumentForm
     list_editable = ["price", "discount", "is_active", "is_aktsiya"]
