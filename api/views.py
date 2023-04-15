@@ -51,7 +51,7 @@ from pages.models import (
 
 
 class ProductViewSet(generics.ListAPIView):
-    queryset = ProductModel.objects.all()
+    queryset = ProductModel.objects.filter(is_active=True)
     serializer_class = ProductSerializer
     filterset_class = ProductFilter
 
@@ -68,13 +68,13 @@ class SimilarProductsViewSet(generics.ListAPIView):
     def get_queryset(self):
         pk = self.kwargs["pk"]
         product = ProductModel.objects.get(id=pk)
-        return ProductModel.objects.filter(category=product.category).exclude(
+        return ProductModel.objects.filter(category=product.category, is_active=True).exclude(
             id=product.id
         )[:5]
 
 
 class ProductCategoryViewSet(generics.ListAPIView):
-    queryset = ProductCategoryModel.objects.all()
+    queryset = ProductCategoryModel.objects.filter(is_active=True)
     serializer_class = ProductCategorySerializer
 
 
@@ -84,7 +84,7 @@ class ProductCategoryRetrieveViewSet(generics.RetrieveAPIView):
 
 
 class CollectionCategoryViewSet(generics.ListAPIView):
-    queryset = CollectionCategoryModel.objects.all()
+    queryset = CollectionCategoryModel.objects.filter(is_active=True)
     serializer_class = CollectionCategorySerializer
 
 
@@ -94,7 +94,7 @@ class CollectionCategoryRetrieveViewSet(generics.RetrieveAPIView):
 
 
 class CollectionViewSet(generics.ListAPIView):
-    queryset = CollectionModel.objects.all()
+    queryset = CollectionModel.objects.filter(is_active=True)
     serializer_class = CollectionSerializer
     filterset_class = CollectionFilter
 
@@ -111,7 +111,7 @@ class CollectionSimilarViewSet(generics.ListAPIView):
     def get_queryset(self):
         pk = self.kwargs["pk"]
         collection = CollectionModel.objects.get(id=pk)
-        return CollectionModel.objects.filter(category=collection.category).exclude(
+        return CollectionModel.objects.filter(category=collection.category, is_active=True).exclude(
             id=collection.id
         )[:5]
 

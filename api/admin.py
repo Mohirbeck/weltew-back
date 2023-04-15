@@ -169,7 +169,7 @@ class CollectionAdmin(admin.ModelAdmin):
     inlines = [CollectionImageInline]
 
     fieldsets = (
-        ("Общее", {"fields": ("name", "discount", "description", "category", "youtube_video_id")}),
+        ("Общее", {"fields": ("name", "discount", "description", "category", "youtube_video_id", "is_active")}),
         ("Товары", {"fields": ("products", "default_products")}),
     )
 

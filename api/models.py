@@ -124,6 +124,7 @@ class ProductCategoryModel(models.Model):
     image = models.FileField(
         upload_to="images/", null=True, blank=True, verbose_name="Изображение"
     )
+    is_active = models.BooleanField(default=True, verbose_name="Активность")
     parent = models.ForeignKey(
         "self",
         on_delete=models.DO_NOTHING,
@@ -147,6 +148,7 @@ class CollectionCategoryModel(models.Model):
     image = models.FileField(
         upload_to="images/", null=True, blank=True, verbose_name="Изображение"
     )
+    is_active = models.BooleanField(default=True, verbose_name="Активность")
     url = models.CharField(max_length=255, default="")
 
     class Meta:
@@ -166,6 +168,7 @@ class CollectionModel(models.Model):
     products = models.ManyToManyField(
         ProductModel, blank=True, related_name="collection", verbose_name="Товары"
     )
+    is_active = models.BooleanField(default=True, verbose_name="Активность")
     yotube_video_id = models.CharField(max_length=255, default="", null=True, blank=True, verbose_name="ID Youtube видео")
     manufacturer = models.ForeignKey(
         "ManufacturerModel",
