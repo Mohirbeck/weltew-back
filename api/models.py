@@ -60,7 +60,7 @@ class ProductModel(models.Model):
     assembly = models.FileField(
         upload_to="assembly/", default="", verbose_name="Сборка", null=True, blank=True
     )
-    yotube_video_id = models.CharField(max_length=255, default="", null=True, blank=True, verbose_name="ID Youtube видео")
+    youtube_video_id = models.CharField(max_length=255, default="", null=True, blank=True, verbose_name="ID Youtube видео")
     features = models.JSONField(null=True, blank=True, verbose_name="Характеристики")
     url = models.CharField(max_length=255, verbose_name="Ссылка", null=True, blank=True)
     is_active = models.BooleanField(default=True, verbose_name="Активность")
@@ -169,7 +169,7 @@ class CollectionModel(models.Model):
         ProductModel, blank=True, related_name="collection", verbose_name="Товары"
     )
     is_active = models.BooleanField(default=True, verbose_name="Активность")
-    yotube_video_id = models.CharField(max_length=255, default="", null=True, blank=True, verbose_name="ID Youtube видео")
+    youtube_video_id = models.CharField(max_length=255, default="", null=True, blank=True, verbose_name="ID Youtube видео")
     manufacturer = models.ForeignKey(
         "ManufacturerModel",
         on_delete=models.CASCADE,
