@@ -48,6 +48,7 @@ from pages.models import (
     SecondaryBannerModel,
     InstagramTokenModel,
 )
+from django.views.decorators.csrf import csrf_exempt
 
 
 class ProductViewSet(generics.ListAPIView):
@@ -189,7 +190,8 @@ def refresh_token():
 
 
 class OrderToCRM(APIView):
-    def post(self, request, format=None):
+    @csrf_exempt
+    def post(self, request):
         refresh_token()
         url = "https://saroyconcept.amocrm.ru/api/v4/leads/complex"
         headers = {
@@ -245,49 +247,12 @@ class OrderToCRM(APIView):
         ]
         req_data = json.dumps(req_data)
         response = requests.post(url, data=req_data, headers=headers)
-        print(req_data)
+        print(response.json())
         if response.status_code == 200:
             order.lead_id = response.json()[0]["id"]
             order.save()
 
         return Response({"success": True})
-
-    # if collection:
-    # products = [
-    #     f"{item.product.name} - {item.quantity} шт" for item in order.products.all()
-    # ]
-    # ps = "\n".join(products)
-    # text = f"Коллекции {collection}" + "\n" + ps
-    # else:
-    #     products = [
-    #         f"{item.product.name} - {item.quantity} шт" for item in order.products.all()
-    #     ]
-    #     text = "\n".join(products)
-    # data = [
-    #     {
-    # "created_by": 0,
-    # "price": int(order.total_price),
-    # "custom_fields_values": [
-    #     {"field_id": 1065243, "values": [{"value": text}]}
-    # ],
-    # "pipeline_id": 6222090,
-    # "_embedded": {
-    #     "contacts": [
-    #         {
-    #             "first_name": order.fio,
-    #             "custom_fields_values": [
-    #                 {"field_code": "PHONE", "values": [{"value": order.phone}]}
-    #             ],
-    #         }
-    #     ]
-    # },
-    #     }
-    # ]
-    # data = json.dumps(data)
-    # response = requests.post(url, data=data, headers=headers)
-    # if response.status_code == 200:
-    #     order.lead_id = response.json()[0]["id"]
-    #     order.save()
 
 class Search(APIView, LimitOffsetPagination):
     def get(self, request):
