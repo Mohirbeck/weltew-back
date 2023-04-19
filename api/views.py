@@ -48,8 +48,12 @@ from pages.models import (
     SecondaryBannerModel,
     InstagramTokenModel,
 )
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication 
 
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+
+    def enforce_csrf(self, request):
+        return  # To not perform the csrf check previously happening
 
 class ProductViewSet(generics.ListAPIView):
     queryset = ProductModel.objects.filter(is_active=True)
@@ -189,8 +193,9 @@ def refresh_token():
             obj.save()
 
 
+
 class OrderToCRM(APIView):
-    @csrf_exempt
+    authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
     def post(self, request):
         refresh_token()
         url = "https://saroyconcept.amocrm.ru/api/v4/leads/complex"
