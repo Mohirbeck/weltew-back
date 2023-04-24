@@ -152,8 +152,9 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductCategoryModel)
 class ProductCategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "get_image"]
-    
+    list_display = ["get_image", "name", "order", "is_active"]
+    list_editable = ["order"]
+
     def get_image(self, obj):
         if obj.image:
             return mark_safe(f'<img src="{obj.image.url}" width="50" height="50"')
@@ -162,8 +163,13 @@ class ProductCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(CollectionCategoryModel)
 class CollectionCategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "image"]
-    list_editable = ["image"]
+    list_display = ["get_image", "name", "order", "is_active"]
+    list_editable = ["order"]
+
+    def get_image(self, obj):
+        if obj.image:
+            return mark_safe(f'<img src="{obj.image.url}" width="50" height="50"')
+        return "Нет фото"
 
 
 @admin.register(CollectionModel)
@@ -174,7 +180,19 @@ class CollectionAdmin(admin.ModelAdmin):
     inlines = [CollectionImageInline]
 
     fieldsets = (
-        ("Общее", {"fields": ("name", "discount", "description", "category", "youtube_video_id", "is_active")}),
+        (
+            "Общее",
+            {
+                "fields": (
+                    "name",
+                    "discount",
+                    "description",
+                    "category",
+                    "youtube_video_id",
+                    "is_active",
+                )
+            },
+        ),
         ("Товары", {"fields": ("products", "default_products")}),
     )
 
@@ -196,6 +214,7 @@ class CRMAdmin(admin.ModelAdmin):
     list_display = ["integration_id", "secret_key"]
     actions = [refresh_token, new_token]
 
+
 @admin.register(OrderModel)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['fio', 'phone', 'total_price']
+    list_display = ["fio", "phone", "total_price"]
