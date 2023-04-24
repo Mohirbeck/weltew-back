@@ -79,7 +79,7 @@ class SimilarProductsViewSet(generics.ListAPIView):
 
 
 class ProductCategoryViewSet(generics.ListAPIView):
-    queryset = ProductCategoryModel.objects.filter(is_active=True)
+    queryset = ProductCategoryModel.objects.filter(is_active=True).order_by("order")
     serializer_class = ProductCategorySerializer
 
 
@@ -89,7 +89,7 @@ class ProductCategoryRetrieveViewSet(generics.RetrieveAPIView):
 
 
 class CollectionCategoryViewSet(generics.ListAPIView):
-    queryset = CollectionCategoryModel.objects.filter(is_active=True)
+    queryset = CollectionCategoryModel.objects.filter(is_active=True).order_by("order")
     serializer_class = CollectionCategorySerializer
 
 

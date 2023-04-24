@@ -152,8 +152,12 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductCategoryModel)
 class ProductCategoryAdmin(admin.ModelAdmin):
-    list_display = ["name", "parent", "image"]
-    list_editable = ["parent", "image"]
+    list_display = ["name", "get_image"]
+    
+    def get_image(self, obj):
+        if obj.image:
+            return mark_safe(f'<img src="{obj.image.url}" width="50" height="50"')
+        return "Нет фото"
 
 
 @admin.register(CollectionCategoryModel)

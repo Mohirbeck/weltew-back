@@ -124,16 +124,8 @@ class ProductCategoryModel(models.Model):
     image = models.FileField(
         upload_to="images/", null=True, blank=True, verbose_name="Изображение"
     )
+    order = models.IntegerField(default=0, verbose_name="Порядок")
     is_active = models.BooleanField(default=True, verbose_name="Активность")
-    parent = models.ForeignKey(
-        "self",
-        on_delete=models.DO_NOTHING,
-        null=True,
-        blank=True,
-        related_name="children",
-    )
-    layer = models.IntegerField(default=0)
-    last = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Категория товара"
@@ -149,6 +141,7 @@ class CollectionCategoryModel(models.Model):
         upload_to="images/", null=True, blank=True, verbose_name="Изображение"
     )
     is_active = models.BooleanField(default=True, verbose_name="Активность")
+    order = models.IntegerField(default=0, verbose_name="Порядок")
     url = models.CharField(max_length=255, default="")
 
     class Meta:
