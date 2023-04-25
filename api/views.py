@@ -266,8 +266,8 @@ class Search(APIView, LimitOffsetPagination):
         collections = CollectionModel.objects.all()
         if query:
             print(query)
-            products = products.filter(name__icontains=query)
-            collections = collections.filter(name__icontains=query)
+            products = products.filter(name__icontains=query, is_active=True)
+            collections = collections.filter(name__icontains=query, is_active=True)
             print(products, collections)
             # queryset = self.paginate_queryset(queryset, request, view=self)
         queryset = list(chain(collections, products))
