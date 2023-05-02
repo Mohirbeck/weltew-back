@@ -204,9 +204,9 @@ class CollectionAdmin(admin.ModelAdmin):
         return "Нет фото"
 
 
-@admin.register(Customer)
-class CustomerAdmin(admin.ModelAdmin):
-    list_display = ["name", "device"]
+# @admin.register(Customer)
+# class CustomerAdmin(admin.ModelAdmin):
+#     list_display = ["name", "device"]
 
 
 @admin.register(CRMModel)
