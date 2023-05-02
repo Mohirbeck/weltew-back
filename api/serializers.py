@@ -80,6 +80,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class CollectionRetrieveSerializer(serializers.ModelSerializer):
     images = CollectionImagesSerializer(many=True, read_only=True)
     products = ProductSerializer(many=True, read_only=True)
+    complementaries = CollectionSerializer(many=True, read_only=True)
     default_products = ProductSerializer(many=True, read_only=True)
     category = CollectionCategorySerializer(many=False, read_only=True)
 
