@@ -200,7 +200,7 @@ class CollectionModel(models.Model):
     def complementaries(self):
         q = self.name.split(" ")[0]
         print(q)
-        return CollectionModel.objects.filter(name__icontains=q).exclude(id=self.id)[:4]
+        return CollectionModel.objects.filter(name__icontains=q, is_active=True).exclude(id=self.id)[:4]
 
     @property
     def all_images(self):
